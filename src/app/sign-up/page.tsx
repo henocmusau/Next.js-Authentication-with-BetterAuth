@@ -20,7 +20,6 @@ export default async function SignIn() {
             <section className="basis-1/2 lg:basis-2/3 h-dvh hidden md:flex md:flex-col">
                 <Image
                     src={img1}
-                    objectFit="cover"
                     alt="Background"
                     className="object-cover bg-cover object-center h-full w-full"
                 />

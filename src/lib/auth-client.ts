@@ -56,4 +56,13 @@ export const {
     useActiveOrganization,
 } = client;
 
+
+export type BetterClientError = {
+    code?: string | undefined;
+    message?: string | undefined;
+    t?: boolean | undefined;
+    status: number;
+    statusText: string;
+} | null
+
 client.$store.listen("$sessionSignal", async () => { });

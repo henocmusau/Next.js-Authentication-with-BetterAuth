@@ -4,9 +4,11 @@ import FormInput from './FormInput'
 import { SignUpUsername } from '@/actions/auth'
 import { client } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
+import SubmitButton from './SubmitButton'
 
 export default function SignUpForm() {
     const [isPending, setIsPending] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     const router = useRouter()
 
     const handleSubmit = async (data: FormData) => {
@@ -25,10 +27,10 @@ export default function SignUpForm() {
                 username,
                 displayUsername: name.trim()
                 // callbackURL: '/dashboard'
+            }, {
+                onError(ctx) { setError(ctx.error.message) },
+                onSuccess: () => router.push('/dashboard')
             })
-            router.push('/dashboard')
-        } catch (error) {
-            console.error(error)
         } finally {
             setIsPending(false)
         }
@@ -37,10 +39,8 @@ export default function SignUpForm() {
     return (
         <form action={handleSubmit} className="w-full h-full flex flex-col gap-4 items-center justify-center">
             <div className="h-10 w-10 text-center rounded-full gradient-1" />
-            <h1 className="mb-8 text-3xl font-semibold">Let's Get Started !</h1>
-            {/* {data ?
-                <p className='p-4 bg-red-800 text-white rounded'>{data?.error.message} </p> : null
-            } */}
+            <h1 className="mb-4 text-3xl font-semibold">Let's Get Started !</h1>
+            {error ? <p className="bg-red-800/40 w-full mb-4 text-center text-slate-300 rounded p-2">{error} </p> : null}
             <FormInput
                 label="Firstname"
                 name="firstname"
@@ -59,13 +59,7 @@ export default function SignUpForm() {
                 name="email"
                 type="email"
             />
-            <button
-                type="submit"
-                className="w-full rounded py-2 gradient-1 cursor-pointer"
-                disabled={isPending}
-            >
-                {isPending ? "..." : "Sign Up"}
-            </button>
+            <SubmitButton text='Sign Up' />
         </form>
     )
 }
