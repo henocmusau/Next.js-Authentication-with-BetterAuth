@@ -16,13 +16,12 @@ export default function SignUpForm() {
     const emailRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (data: FormData) => {
         setIsPending(true)
-        e.preventDefault()
 
-        const email = emailRef?.current?.value as string
-        const name = firstnameRef?.current?.value as string + ' ' + lastnameRef?.current?.value as string
-        const password = passwordRef?.current?.value as string
+        const email = data.get('email') as string
+        const name = data.get('firstname') as string + ' ' + data.get('lastname') as string
+        const password = data.get('password') as string
         const username = name.replace(' ', '').trim().toLowerCase()
 
         try {
@@ -48,7 +47,7 @@ export default function SignUpForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="w-full h-full flex flex-col gap-4 items-center justify-center">
+        <form action={handleSubmit} className="w-full h-full flex flex-col gap-4 items-center justify-center">
             <div className="h-10 w-10 text-center rounded-full gradient-1" />
             <h1 className="mb-8 text-3xl font-semibold">Let's Get Started !</h1>
             {/* {data ?

@@ -10,21 +10,14 @@ export default function SignInForm() {
     const [pending, setPending] = useState(false)
     const router = useRouter()
 
-    const formRef = useRef<HTMLFormElement>(null)
-    const usernameRef = useRef<HTMLInputElement>(null)
-    const passwordRef = useRef<HTMLInputElement>(null)
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (data: FormData) => {
         setPending(true)
-        e.preventDefault()
-        const data = new FormData()
-        data.append('username', usernameRef?.current?.value as string)
-        data.append('password', passwordRef?.current?.value as string)
+        const username = data.get('username') as string
 
         try {
             await client.signIn.username({
-                username: usernameRef?.current?.value as string,
-                password: passwordRef?.current?.value as string,
+                username: username.trim(),
+                password: data.get('password') as string,
                 // callbackURL: '/dashboard'
             })
             router.push('/dashboard')
@@ -36,19 +29,17 @@ export default function SignInForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="w-full h-full flex flex-col gap-4 items-center justify-center">
+        <form action={handleSubmit} className="w-full h-full flex flex-col gap-4 items-center justify-center">
             <div className="h-20 w-20 mb-4 text-center rounded-full gradient-1" />
             <h1 className="mb-16 text-3xl font-semibold">Welcome back !</h1>
             <FormInput
                 label="Username or Phone"
                 name="username"
-                inputRef={usernameRef}
             />
             <FormInput
                 label="Password"
                 name="password"
                 type="password"
-                inputRef={passwordRef}
             />
             <button
                 type="submit"
