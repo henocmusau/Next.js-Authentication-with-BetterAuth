@@ -6,15 +6,8 @@ import { client } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
 
 export default function SignUpForm() {
-    // const [data, action, isPending] = useActionState(SignUpUsername, undefined)
     const [isPending, setIsPending] = useState(false)
     const router = useRouter()
-
-    const formRef = useRef<HTMLFormElement>(null)
-    const firstnameRef = useRef<HTMLInputElement>(null)
-    const lastnameRef = useRef<HTMLInputElement>(null)
-    const emailRef = useRef<HTMLInputElement>(null)
-    const passwordRef = useRef<HTMLInputElement>(null)
 
     const handleSubmit = async (data: FormData) => {
         setIsPending(true)
@@ -26,10 +19,11 @@ export default function SignUpForm() {
 
         try {
             await client.signUp.email({
-                name,
-                email,
+                name: name.trim(),
+                email: email.trim(),
                 password,
                 username,
+                displayUsername: name.trim()
                 // callbackURL: '/dashboard'
             })
             router.push('/dashboard')
@@ -38,12 +32,6 @@ export default function SignUpForm() {
         } finally {
             setIsPending(false)
         }
-
-
-        // await SignUpUsername(data)
-        //     .then(() => router.push('/dashboard'))
-        //     .catch(e => console.error(e))
-        //     .finally(() => setIsPending(false))
     }
 
     return (
@@ -56,24 +44,20 @@ export default function SignUpForm() {
             <FormInput
                 label="Firstname"
                 name="firstname"
-                inputRef={firstnameRef}
             />
             <FormInput
                 label="Lastname"
                 name="lastname"
-                inputRef={lastnameRef}
             />
             <FormInput
                 label="Password"
                 name="password"
                 type="password"
-                inputRef={passwordRef}
             />
             <FormInput
                 label="Email"
                 name="email"
                 type="email"
-                inputRef={emailRef}
             />
             <button
                 type="submit"
