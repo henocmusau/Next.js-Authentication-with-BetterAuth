@@ -27,7 +27,7 @@ export async function SignInUsername(formData: FormData) {
     }
 }
 
-export async function SignUpUsername(prev: unknown, formData: FormData) {
+export async function SignUpUsername(formData: FormData) {
     const firstname = formData.get('firstname') as string
     const lastname = formData.get('lastname') as string
     const username = firstname.trim() + lastname.trim()

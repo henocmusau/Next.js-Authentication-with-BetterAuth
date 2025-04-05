@@ -60,6 +60,7 @@ const STARTER_PRICE_ID = {
 
 export const auth = betterAuth({
     appName: "Better Auth Demo",
+    trustedOrigins: ['http://192.168.129.246:3000', 'http://localhost:3000'],
     // database: new Pool({
     //     connectionString: "postgres://postgres:1963@localhost:5432/better"
     // }),

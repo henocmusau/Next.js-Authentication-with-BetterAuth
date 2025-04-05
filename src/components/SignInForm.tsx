@@ -21,14 +21,22 @@ export default function SignInForm() {
         data.append('username', usernameRef?.current?.value as string)
         data.append('password', passwordRef?.current?.value as string)
 
-        await SignInUsername(data)
-            .then(() => router.push('/dashboard'))
-            .catch(e => console.error(e))
-            .finally(() => setPending(false))
+        try {
+            await client.signIn.username({
+                username: usernameRef?.current?.value as string,
+                password: passwordRef?.current?.value as string,
+                // callbackURL: '/dashboard'
+            })
+            router.push('/dashboard')
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setPending(false)
+        }
     }
 
     return (
-        <form onSubmit={handleSubmit} ref={formRef} className="w-full h-full flex flex-col gap-4 items-center justify-center">
+        <form onSubmit={handleSubmit} className="w-full h-full flex flex-col gap-4 items-center justify-center">
             <div className="h-20 w-20 mb-4 text-center rounded-full gradient-1" />
             <h1 className="mb-16 text-3xl font-semibold">Welcome back !</h1>
             <FormInput
