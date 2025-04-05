@@ -60,6 +60,9 @@ const STARTER_PRICE_ID = {
 
 export const auth = betterAuth({
     appName: "Better Auth Demo",
+    // database: new Pool({
+    //     connectionString: "postgres://postgres:1963@localhost:5432/better"
+    // }),
     // database: new Database("better.sqlite"),
     database: createPool({
         host: "localhost",

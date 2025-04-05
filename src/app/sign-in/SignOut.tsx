@@ -1,14 +1,20 @@
 'use client'
 import React from 'react'
 import { client } from '@/lib/auth-client'
+import { APIError } from 'better-auth/api'
+import { useRouter } from 'next/navigation'
 
 export default function SignOut() {
+    const router = useRouter()
 
     const signOut = async () => {
+        try {
+            await client.signOut()
 
-        const data = await client.signOut()
-
-        console.log(data)
+            router.push('/sign-in')
+        } catch (error) {
+            if (error instanceof APIError) console.log(error.message, error.status)
+        }
     }
 
     return (

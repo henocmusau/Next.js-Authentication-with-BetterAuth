@@ -1,10 +1,13 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import FormInput from "@/components/FormInput";
 
-export default async function SignUp() {
+import img1 from '@/assets/images/bg.webp'
+
+export default async function SignIn() {
     const session = await auth.api.getSession({
         headers: await headers()
     })
@@ -12,27 +15,50 @@ export default async function SignUp() {
     if (session) redirect('/dashboard')
 
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-            <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <div className="flex grow h-full ">
+            <section className="basis-1/2 lg:basis-2/3 h-dvh hidden md:flex md:flex-col">
                 <Image
-                    className="dark:invert"
-                    src="/next.svg"
-                    alt="Next.js logo"
-                    width={180}
-                    height={38}
-                    priority
+                    src={img1}
+                    objectFit="cover"
+                    alt="Background"
+                    className="object-cover bg-cover object-center h-full w-full"
                 />
-                <h1 className="text-3xl font-bold">Sign Up</h1>
-
-                <Link
-                    href='/dashboard'
-                    className="bg-blue-600 text-white px-8 py-2 rounded"
-                >
-                    Go to Dashboard
-                </Link>
-
-            </main>
-
+            </section>
+            <section className="basis-full md:basis-1/2 lg:basis-1/3 h-full p-8 md:pt-8 md:px-16 text-slate-300">
+                <form action="" className="w-full h-full flex flex-col gap-4 items-center justify-center">
+                    <div className="h-10 w-10 text-center rounded-full gradient-1" />
+                    <h1 className="mb-8 text-3xl font-semibold">Let's Get Started !</h1>
+                    <FormInput
+                        label="Firstname"
+                        name="firstname"
+                    />
+                    <FormInput
+                        label="Lastname"
+                        name="lastname"
+                    />
+                    <FormInput
+                        label="Password"
+                        name="password"
+                        type="password"
+                    />
+                    <FormInput
+                        label="Email"
+                        name="email"
+                        type="email"
+                    />
+                    <button
+                        type="submit"
+                        className="w-full rounded py-2 gradient-1"
+                    >
+                        Sign Up
+                    </button>
+                </form>
+                <p className="text-center mt-4">Already have an account ? {' '}
+                    < Link href={'/sign-in'} className="underline text-purple-300 decoration-purple-300 ">
+                        Sign in
+                    </Link>
+                </p>
+            </section>
         </div>
     );
 }

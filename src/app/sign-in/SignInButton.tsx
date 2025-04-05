@@ -4,6 +4,7 @@ import { client } from '@/lib/auth-client'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { APIError } from 'better-auth/api'
+import { redirect } from 'next/navigation'
 
 export default function SignInButton() {
 
@@ -21,7 +22,7 @@ export default function SignInButton() {
         // headers: headers()
       })
 
-      console.log(data)
+      redirect('/dashboard')
     } catch (error) {
       if (error instanceof APIError) console.log(error.message, error.status)
     }
