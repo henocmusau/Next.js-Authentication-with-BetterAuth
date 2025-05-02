@@ -3,6 +3,7 @@ import SignOut from "../sign-in/SignOut";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import CertificationBadge from "@/components/CertificationBadge";
 
 export default async function Dashboard() {
     const session = await auth.api.getSession({
@@ -20,7 +21,11 @@ export default async function Dashboard() {
                     <div className="h-20 w-20 mb-4 text-center rounded-full gradient-1 flex items-center justify-center uppercase">
                         <p className="uppercase text-4xl font-bold">{user.name.charAt(0)}</p>
                     </div>
-                    <h1 className="text-xl font-semibold capitalize">{user.name}</h1>
+                    <h1 className="text-xl font-semibold capitalize flex">{user.name}
+                        {user.emailVerified ? <span>
+                            <CertificationBadge />
+                        </span> : null}
+                    </h1>
                     <p className=" text-sm text-blue-300">{user.email ?? '@' + user.name.replace(' ', '')}</p>
                 </div>
                 <SignOut />

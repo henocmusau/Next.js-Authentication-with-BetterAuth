@@ -20,7 +20,7 @@ import { createPool } from "mysql2/promise";
 import { PenTool } from "lucide-react";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db";
-import * as schema from "@/db/schema";
+import * as schema from "@/db/schema/auth-schema";
 // import { reactInvitationEmail } from "./email/invitation";
 // import { LibsqlDialect } from "@libsql/kysely-libsql";
 // import { reactResetPasswordEmail } from "./email/reset-password";

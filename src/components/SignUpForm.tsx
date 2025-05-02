@@ -15,16 +15,17 @@ export default function SignUpForm() {
         setIsPending(true)
 
         const email = data.get('email') as string
-        const name = data.get('firstname') as string + ' ' + data.get('lastname') as string
+        const firstname = data.get('firstname') as string
+        const lastname = data.get('lastname') as string
+        const name = firstname.trim() + ' ' + lastname.trim()
         const password = data.get('password') as string
-        const username = name.replace(' ', '').trim().toLowerCase()
 
         try {
             await client.signUp.email({
                 name: name.trim(),
                 email: email.trim(),
                 password,
-                username,
+                username: firstname.trim().toLowerCase() + lastname.trim().toLowerCase(),
                 displayUsername: name.trim()
                 // callbackURL: '/dashboard'
             }, {

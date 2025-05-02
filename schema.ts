@@ -148,30 +148,30 @@ export const oauthConsent = pgTable("oauth_consent", {
 
 // ----- Définition des Relations (Pour Drizzle Kit / Querying) -----
 
-export const usersRelations = relations(user, ({ many }) => ({
-    accounts: many(account), // Un utilisateur peut avoir plusieurs comptes (OAuth, etc.)
-    sessions: many(session), // Un utilisateur peut avoir plusieurs sessions actives
-    // messages: many(messages), // Un utilisateur peut envoyer plusieurs messages
-}));
-
-export const accountsRelations = relations(account, ({ one }) => ({
-    user: one(user, {
-        fields: [account.userId],
-        references: [user.id],
-    }), // Un compte appartient à un utilisateur
-}));
-
-export const sessionsRelations = relations(session, ({ one }) => ({
-    user: one(user, {
-        fields: [session.userId],
-        references: [user.id],
-    }), // Une session appartient à un utilisateur
-}));
-
-// export const messagesRelations = relations(messages, ({ one }) => ({
-//     author: one(user, { // Renommé 'author' pour la clarté côté message
-//         fields: [messages.userId],
-//         references: [user.id],
-//     }), // Un message a un auteur (utilisateur)
+// export const usersRelations = relations(user, ({ many }) => ({
+//     accounts: many(account), // Un utilisateur peut avoir plusieurs comptes (OAuth, etc.)
+//     sessions: many(session), // Un utilisateur peut avoir plusieurs sessions actives
+//     // messages: many(messages), // Un utilisateur peut envoyer plusieurs messages
 // }));
+
+// export const accountsRelations = relations(account, ({ one }) => ({
+//     user: one(user, {
+//         fields: [account.userId],
+//         references: [user.id],
+//     }), // Un compte appartient à un utilisateur
+// }));
+
+// export const sessionsRelations = relations(session, ({ one }) => ({
+//     user: one(user, {
+//         fields: [session.userId],
+//         references: [user.id],
+//     }), // Une session appartient à un utilisateur
+// }));
+
+// // export const messagesRelations = relations(messages, ({ one }) => ({
+// //     author: one(user, { // Renommé 'author' pour la clarté côté message
+// //         fields: [messages.userId],
+// //         references: [user.id],
+// //     }), // Un message a un auteur (utilisateur)
+// // }));
 
