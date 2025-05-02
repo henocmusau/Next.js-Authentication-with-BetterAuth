@@ -18,6 +18,9 @@ import {
 import { Database } from "sqlite3";
 import { createPool } from "mysql2/promise";
 import { PenTool } from "lucide-react";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "@/db";
+import * as schema from "@/db/schema";
 // import { reactInvitationEmail } from "./email/invitation";
 // import { LibsqlDialect } from "@libsql/kysely-libsql";
 // import { reactResetPasswordEmail } from "./email/reset-password";
@@ -60,17 +63,21 @@ const STARTER_PRICE_ID = {
 
 export const auth = betterAuth({
     appName: "Better Auth Demo",
-    trustedOrigins: ['http://192.168.107.246:3000', 'http://localhost:3000'],
+    trustedOrigins: ['http://192.168.26.246:3000', 'http://localhost:3000'],
     // database: new Pool({
     //     connectionString: "postgres://postgres:1963@localhost:5432/better"
     // }),
     // database: new Database("better.sqlite"),
-    database: createPool({
-        host: "localhost",
-        user: "root",
-        password: "1963",
-        database: "better",
+    database: drizzleAdapter(db, {
+        provider: "pg", // or "pg" or "mysql"
+        schema: schema
     }),
+    // database: createPool({
+    //     host: "localhost",
+    //     user: "root",
+    //     password: "1963",
+    //     database: "better",
+    // }),
     emailVerification: {
         // async sendVerificationEmail({ user, url }) {
         //     const res = await resend.emails.send({
