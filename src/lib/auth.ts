@@ -13,7 +13,9 @@ import {
     openAPI,
     oidcProvider,
     customSession,
-    username
+    username,
+    phoneNumber,
+    emailOTP
 } from "better-auth/plugins";
 import { Database } from "sqlite3";
 import { createPool } from "mysql2/promise";
@@ -21,45 +23,11 @@ import { PenTool } from "lucide-react";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db";
 import * as schema from "@/db/schema/auth-schema";
-// import { reactInvitationEmail } from "./email/invitation";
-// import { LibsqlDialect } from "@libsql/kysely-libsql";
-// import { reactResetPasswordEmail } from "./email/reset-password";
-// import { resend } from "./email/resend";
-// import { MysqlDialect } from "kysely";
-// import { createPool } from "mysql2/promise";
-// import { nextCookies } from "better-auth/next-js";
-// import { passkey } from "better-auth/plugins/passkey";
-// import { stripe } from "@better-auth/stripe";
-// import { Stripe } from "stripe";
+import { sendEmailOTP, sendSMSOTP } from "@/actions/otp";
+
 
 const from = process.env.BETTER_AUTH_EMAIL || "delivered@resend.dev";
 const to = process.env.TEST_EMAIL || "";
-
-// const libsql = new LibsqlDialect({
-// 	url: process.env.TURSO_DATABASE_URL || "",
-// 	authToken: process.env.TURSO_AUTH_TOKEN || "",
-// });
-
-// const mysql = process.env.USE_MYSQL
-// 	? new MysqlDialect(createPool(process.env.MYSQL_DATABASE_URL || ""))
-// 	: null;
-
-// const dialect = process.env.USE_MYSQL ? mysql : libsql;
-
-// if (!dialect) {
-// 	throw new Error("No dialect found");
-// }
-
-const PROFESSION_PRICE_ID = {
-    default: "price_1QxWZ5LUjnrYIrml5Dnwnl0X",
-    annual: "price_1QxWZTLUjnrYIrmlyJYpwyhz",
-};
-const STARTER_PRICE_ID = {
-    default: "price_1QxWWtLUjnrYIrmleljPKszG",
-    annual: "price_1QxWYqLUjnrYIrmlonqPThVF",
-};
-
-// const prisma = new PrismaClient()
 
 export const auth = betterAuth({
     appName: "Better Auth Demo",
@@ -186,6 +154,25 @@ export const auth = betterAuth({
             loginPage: "/sign-in",
         }),
         oneTap(),
+        phoneNumber({
+            sendOTP: ({ phoneNumber, code }, request) => {
+                sendSMSOTP(phoneNumber, code)
+            },
+            signUpOnVerification: {
+                getTempEmail: (phoneNumber) => {
+                    return `${phoneNumber}@klaxix.com`
+                },
+                getTempName: (phoneNumber) => {
+                    return phoneNumber
+                }
+            }
+        }),
+
+        emailOTP({
+            async sendVerificationOTP({ email, otp, type }) {
+                sendEmailOTP(email, otp, type)
+            }
+        }),
         customSession(async (session) => {
             return {
                 ...session,
