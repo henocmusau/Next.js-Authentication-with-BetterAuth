@@ -22,6 +22,7 @@ import { db } from "@/db";
 import * as schema from "@/db/schema/auth-schema";
 import { sendEmailOTP, sendSMSOTP } from "@/actions/otp";
 import { user } from "../../auth-schema";
+import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
     appName: "Better Auth Demo",
@@ -144,12 +145,14 @@ export const auth = betterAuth({
             }
         }),
         customSession(async (session) => {
-            const data = await db.select().from(user)
+            const data = await db.query.user.findFirst({
+                where: eq(user.id, session.user.id)
+            })
             return {
                 ...session,
                 user: {
                     ...session.user,
-                    isFirstConnection: user.isFirstConnection,
+                    isFirstConnection: data?.isFirstConnection,
                 },
             };
         }),
