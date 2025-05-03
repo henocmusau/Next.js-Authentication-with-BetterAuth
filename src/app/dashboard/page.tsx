@@ -19,9 +19,9 @@ export default async function Dashboard() {
 
                 <div className="flex flex-col items-center w-full h-full">
                     <div className="h-20 w-20 mb-4 text-center rounded-full gradient-1 flex items-center justify-center uppercase">
-                        <p className="uppercase text-4xl font-bold">{user.name.charAt(0)}</p>
+                        <p className="uppercase text-4xl font-bold">{user.name.charAt(0) || user.email.charAt(0)}</p>
                     </div>
-                    <h1 className="text-xl font-semibold capitalize flex">{user.name}
+                    <h1 className="text-xl font-semibold capitalize flex">{user.name || user.email.split('@')[0]}
                         {user.emailVerified ? <span>
                             <CertificationBadge />
                         </span> : null}

@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "is_first_connection" SET DEFAULT true;

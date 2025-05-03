@@ -10,13 +10,16 @@ import {
     genericOAuthClient,
     usernameClient,
     phoneNumberClient,
-    emailOTPClient
+    emailOTPClient,
+    customSessionClient
 } from "better-auth/client/plugins";
+import { auth } from "./auth";
 // import { toast } from "sonner";
 // import { stripeClient } from "@better-auth/stripe/client";
 
 export const client = createAuthClient({
     plugins: [
+        customSessionClient<typeof auth>(),
         organizationClient(),
         twoFactorClient({
             onTwoFactorRedirect() {

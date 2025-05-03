@@ -15,4 +15,4 @@ import {
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
-export const db = drizzle(process.env.DATABASE_URL!, { logger: true });
+export const db = drizzle(process.env.DATABASE_URL!, { logger: false });
