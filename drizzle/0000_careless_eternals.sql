@@ -119,8 +119,12 @@ CREATE TABLE "user" (
 	"banned" boolean,
 	"ban_reason" text,
 	"ban_expires" timestamp,
+	"phone_number" text,
+	"phone_number_verified" boolean,
+	"is_first_connection" boolean DEFAULT true NOT NULL,
 	CONSTRAINT "user_email_unique" UNIQUE("email"),
-	CONSTRAINT "user_username_unique" UNIQUE("username")
+	CONSTRAINT "user_username_unique" UNIQUE("username"),
+	CONSTRAINT "user_phone_number_unique" UNIQUE("phone_number")
 );
 --> statement-breakpoint
 CREATE TABLE "verification" (

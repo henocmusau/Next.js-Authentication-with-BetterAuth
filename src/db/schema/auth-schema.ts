@@ -17,7 +17,7 @@ export const user = pgTable("user", {
 	banExpires: timestamp('ban_expires'),
 	phoneNumber: text('phone_number').unique(),
 	phoneNumberVerified: boolean('phone_number_verified'),
-	isFirstConnection: boolean('is_first_connection').default(true)
+	isFirstConnection: boolean('is_first_connection').default(true).notNull()
 });
 
 export const session = pgTable("session", {

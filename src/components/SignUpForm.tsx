@@ -5,62 +5,49 @@ import { SignUpUsername } from '@/actions/auth'
 import { client } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
 import SubmitButton from './SubmitButton'
+import useAuth from '@/hooks/useAuth'
 
 export default function SignUpForm() {
-    const [isPending, setIsPending] = useState(false)
-    const [error, setError] = useState<string | null>(null)
-    const router = useRouter()
+    const { activeOTP, id, otp, error, firstname, lastname, handleFirstnameChange, handleLastnameChange, handleIdChange, handleOtpChange, handleSubmit } = useAuth(true)
 
-    const handleSubmit = async (data: FormData) => {
-        setIsPending(true)
-
-        const email = data.get('email') as string
-        const firstname = data.get('firstname') as string
-        const lastname = data.get('lastname') as string
-        const name = firstname.trim() + ' ' + lastname.trim()
-        const password = data.get('password') as string
-
-        try {
-            await client.signUp.email({
-                name: name.trim(),
-                email: email.trim(),
-                password,
-                username: firstname.trim().toLowerCase() + lastname.trim().toLowerCase(),
-                displayUsername: name.trim()
-                // callbackURL: '/dashboard'
-            }, {
-                onError(ctx) { setError(ctx.error.message) },
-                onSuccess: () => router.push('/dashboard')
-            })
-        } finally {
-            setIsPending(false)
-        }
-    }
+    const fields = activeOTP ?
+        <>
+            <FormInput
+                label="Entrez le code"
+                name="otp"
+                value={otp}
+                onChange={handleOtpChange}
+            />
+            <SubmitButton text='Vérifier le code' />
+        </> :
+        <>
+            <FormInput
+                label="Firstname"
+                name="firstname"
+                value={firstname}
+                onChange={handleFirstnameChange}
+            />
+            <FormInput
+                label="Lastname"
+                name="lastname"
+                value={lastname}
+                onChange={handleLastnameChange}
+            />
+            <FormInput
+                label="Email or Phone number"
+                name="id"
+                value={id}
+                onChange={handleIdChange}
+            />
+            <SubmitButton text='Sign Up' />
+        </>
 
     return (
         <form action={handleSubmit} className="w-full h-full flex flex-col gap-4 items-center justify-center">
             <div className="h-10 w-10 text-center rounded-full gradient-1" />
             <h1 className="mb-4 text-3xl font-semibold">Let's Get Started !</h1>
             {error ? <p className="bg-red-800/40 w-full mb-4 text-center text-slate-300 rounded p-2">{error} </p> : null}
-            <FormInput
-                label="Firstname"
-                name="firstname"
-            />
-            <FormInput
-                label="Lastname"
-                name="lastname"
-            />
-            <FormInput
-                label="Password"
-                name="password"
-                type="password"
-            />
-            <FormInput
-                label="Email"
-                name="email"
-                type="email"
-            />
-            <SubmitButton text='Sign Up' />
+            {fields}
         </form>
     )
 }

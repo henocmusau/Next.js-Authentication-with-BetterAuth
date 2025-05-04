@@ -2,10 +2,10 @@
 import React, { ChangeEvent, useActionState, useRef, useState } from 'react'
 import FormInput from './FormInput'
 import SubmitButton from './SubmitButton'
-import useLogin from '@/hooks/useLogin'
+import useAuth from '@/hooks/useAuth'
 
 export default function SignInForm() {
-    const { activeOTP, id, otp, error, handleIdChange, handleOtpChange, handleSubmit } = useLogin()
+    const { activeOTP, id, otp, error, handleIdChange, handleOtpChange, handleSubmit } = useAuth()
 
     const fields = activeOTP ?
         <>

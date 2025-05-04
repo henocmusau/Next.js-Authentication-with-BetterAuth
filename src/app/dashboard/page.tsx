@@ -12,8 +12,7 @@ export default async function Dashboard() {
 
     const user = session?.user
     if (!user) redirect('/sign-in')
-    console.log(user)
-
+    console.log(user.isFirstConnection)
     return (
         <div className="grid grid-rows-[20px_1fr_20px] justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
             <main className="flex flex-col gap-[32px] row-start-2 items-center justify-center sm:items-start">
@@ -30,7 +29,6 @@ export default async function Dashboard() {
                     <p className=" text-sm text-blue-300">{user.email ?? '@' + user.name.replace(' ', '')}</p>
                 </div>
                 <SignOut />
-                <p>{user.isFirstConnection ? "New" : 'Old'}</p>
             </main>
         </div>
     );

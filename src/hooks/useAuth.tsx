@@ -28,15 +28,19 @@ const cleanPhoneNumber = (phone: string) => {
     }
 }
 
-export default function useLogin() {
+export default function useAuth(isSignUp?: boolean) {
     const [pending, setPending] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [activeOTP, setActiveOTP] = useState(false)
+    const [firstname, setFirstname] = useState('')
+    const [lastname, setLastname] = useState('')
     const [id, setId] = useState('')
     const [otp, setOtp] = useState('')
     const router = useRouter()
 
 
+    const handleFirstnameChange = (e: ChangeEvent<HTMLInputElement>) => setFirstname(e.target.value)
+    const handleLastnameChange = (e: ChangeEvent<HTMLInputElement>) => setLastname(e.target.value)
     const handleIdChange = (e: ChangeEvent<HTMLInputElement>) => setId(e.target.value)
     const handleOtpChange = (e: ChangeEvent<HTMLInputElement>) => setOtp(e.target.value)
 
@@ -57,6 +61,10 @@ export default function useLogin() {
                     onError(ctx) { setError(ctx.error.message) },
                     onSuccess: () => setActiveOTP(true)
                 })
+            } catch (error: any) {
+                setError(error?.message || error)
+                throw new Error(error)
+
             } finally {
                 setPending(false)
             }
@@ -69,6 +77,9 @@ export default function useLogin() {
                     onError(ctx) { setError(ctx.error.message) },
                     onSuccess: () => setActiveOTP(true)
                 })
+            } catch (error: any) {
+                setError(error?.message || error)
+                throw new Error(error)
             } finally {
                 setPending(false)
             }
@@ -87,8 +98,13 @@ export default function useLogin() {
                     code: otp
                 }, {
                     onError(ctx) { setError(ctx.error.message) },
-                    onSuccess: () => router.push('/dashboard')
+                    onSuccess: (ctx) => {
+                        router.push('/dashboard')
+                    }
                 })
+            } catch (error: any) {
+                setError(error?.message || error)
+                throw new Error(error)
             } finally {
                 setPending(false)
             }
@@ -99,13 +115,30 @@ export default function useLogin() {
                     otp: otp
                 }, {
                     onError(ctx) { setError(ctx.error.message) },
-                    onSuccess: () => router.push('/dashboard')
                 })
                 console.log(data?.data?.user)
+            } catch (error: any) {
+                setError(error?.message || error)
+                throw new Error(error)
             } finally {
                 setPending(false)
             }
         }
     }
-    return { activeOTP, id, setId, otp, setOtp, pending, error, handleIdChange, handleOtpChange, handleSubmit }
+    return {
+        id: id.trim().toLowerCase(),
+        firstname,
+        lastname,
+        otp: otp.trim(),
+        error,
+        pending,
+        activeOTP,
+        name: (firstname.trim() + ' ' + lastname.trim()).toLowerCase(),
+        username: firstname.trim().toLowerCase() + lastname.trim().toLowerCase(),
+        handleIdChange,
+        handleFirstnameChange,
+        handleLastnameChange,
+        handleOtpChange,
+        handleSubmit
+    }
 }
