@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import CertificationBadge from "@/components/CertificationBadge";
+import ViewSession from "@/components/ViewSession";
+import { isValidPhoneNumber } from "@/lib/utils";
 
 export default async function Dashboard() {
     const session = await auth.api.getSession({
@@ -12,7 +14,15 @@ export default async function Dashboard() {
 
     const user = session?.user
     if (!user) redirect('/sign-in')
-    console.log(user.isFirstConnection)
+
+    const displayName = () => {
+        if (isValidPhoneNumber(user.email.split('@')[0])) {
+            return user.phoneNumber
+        } else {
+            return user.email ?? '@' + user.name.replace(' ', '')
+        }
+    }
+    // console.log(user.isFirstConnection)
     return (
         <div className="grid grid-rows-[20px_1fr_20px] justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
             <main className="flex flex-col gap-[32px] row-start-2 items-center justify-center sm:items-start">
@@ -22,11 +32,12 @@ export default async function Dashboard() {
                         <p className="uppercase text-4xl font-bold">{user.name.charAt(0) || user.email.charAt(0)}</p>
                     </div>
                     <h1 className="text-xl font-semibold capitalize flex">{user.name || user.email.split('@')[0]}
-                        {user.emailVerified ? <span>
+                        {user.emailVerified || user.phoneNumberVerified ? <span>
                             <CertificationBadge />
                         </span> : null}
                     </h1>
-                    <p className=" text-sm text-blue-300">{user.email ?? '@' + user.name.replace(' ', '')}</p>
+                    <p className=" text-sm text-blue-300">{displayName()}</p>
+                    {/* <ViewSession /> */}
                 </div>
                 <SignOut />
             </main>

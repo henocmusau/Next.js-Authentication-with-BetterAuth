@@ -19,35 +19,22 @@ import { auth } from "./auth";
 
 export const client = createAuthClient({
     plugins: [
-        customSessionClient<typeof auth>(),
-        organizationClient(),
+        // customSessionClient<typeof auth>(),
         twoFactorClient({
             onTwoFactorRedirect() {
                 window.location.href = "/two-factor";
             },
         }),
-        usernameClient(),
-        passkeyClient(),
         adminClient(),
-        multiSessionClient(),
-        oneTapClient({
-            clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
-            promptOptions: {
-                maxAttempts: 1,
-            },
-        }),
-        oidcClient(),
         phoneNumberClient(),
         emailOTPClient(),
         genericOAuthClient(),
-        // stripeClient({
-        // 	subscription: true,
-        // }),
     ],
     fetchOptions: {
         onError(e) {
             if (e.error.status === 429) {
                 // toast.error("Too many requests. Please try again later.");
+                console.error("Too many requests. Please try again later.");
             }
         },
     },
@@ -58,9 +45,7 @@ export const {
     signIn,
     signOut,
     useSession,
-    organization,
-    useListOrganizations,
-    useActiveOrganization,
+    updateUser
 } = client;
 
 

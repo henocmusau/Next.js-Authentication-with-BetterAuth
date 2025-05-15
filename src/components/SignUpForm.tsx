@@ -8,19 +8,45 @@ import SubmitButton from './SubmitButton'
 import useAuth from '@/hooks/useAuth'
 
 export default function SignUpForm() {
-    const { activeOTP, id, otp, error, firstname, lastname, handleFirstnameChange, handleLastnameChange, handleIdChange, handleOtpChange, handleSubmit } = useAuth(true)
+    const { error, id, lastname, firstname, password, handleSignUp, handleFirstnameChange, handleIdChange, handlePasswordChange, handleLastnameChange } = useAuth(true)
 
-    const fields = activeOTP ?
-        <>
-            <FormInput
-                label="Entrez le code"
-                name="otp"
-                value={otp}
-                onChange={handleOtpChange}
-            />
-            <SubmitButton text='Vérifier le code' />
-        </> :
-        <>
+    // const fields = activeOTP ?
+    //     <>
+    //         <FormInput
+    //             label="Entrez le code"
+    //             name="otp"
+    //             value={otp}
+    //             onChange={handleOtpChange}
+    //         />
+    //         <SubmitButton text='Vérifier le code' />
+    //     </> :
+    //     <>
+    //         <FormInput
+    //             label="Firstname"
+    //             name="firstname"
+    //             value={firstname}
+    //             onChange={handleFirstnameChange}
+    //         />
+    //         <FormInput
+    //             label="Lastname"
+    //             name="lastname"
+    //             value={lastname}
+    //             onChange={handleLastnameChange}
+    //         />
+    //         <FormInput
+    //             label="Email or Phone number"
+    //             name="id"
+    //             value={id}
+    //             onChange={handleIdChange}
+    //         />
+    //         <SubmitButton text='Sign Up' />
+    //     </>
+
+    return (
+        <form action={handleSignUp} className="w-full h-full flex flex-col gap-4 items-center justify-center">
+            <div className="h-10 w-10 text-center rounded-full gradient-1" />
+            <h1 className="mb-4 text-3xl font-semibold">Let's Get Started !</h1>
+            {error ? <p className="bg-red-800/40 w-full mb-4 text-center text-slate-300 rounded p-2">{error} </p> : null}
             <FormInput
                 label="Firstname"
                 name="firstname"
@@ -39,15 +65,14 @@ export default function SignUpForm() {
                 value={id}
                 onChange={handleIdChange}
             />
+            <FormInput
+                label="Password"
+                name="password"
+                type='password'
+                value={password}
+                onChange={handlePasswordChange}
+            />
             <SubmitButton text='Sign Up' />
-        </>
-
-    return (
-        <form action={handleSubmit} className="w-full h-full flex flex-col gap-4 items-center justify-center">
-            <div className="h-10 w-10 text-center rounded-full gradient-1" />
-            <h1 className="mb-4 text-3xl font-semibold">Let's Get Started !</h1>
-            {error ? <p className="bg-red-800/40 w-full mb-4 text-center text-slate-300 rounded p-2">{error} </p> : null}
-            {fields}
         </form>
     )
 }

@@ -5,14 +5,9 @@ import {
     bearer,
     admin,
     multiSession,
-    organization,
     twoFactor,
     oneTap,
     oAuthProxy,
-    openAPI,
-    oidcProvider,
-    customSession,
-    username,
     phoneNumber,
     emailOTP
 } from "better-auth/plugins";
@@ -21,26 +16,15 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db";
 import * as schema from "@/db/schema/auth-schema";
 import { sendEmailOTP, sendSMSOTP } from "@/actions/otp";
-import { user } from "../../auth-schema";
-import { eq } from "drizzle-orm";
+import { isValidPhoneNumber } from "./utils";
 
 export const auth = betterAuth({
     appName: "Better Auth Demo",
-    trustedOrigins: ['http://192.168.26.246:3000', 'http://localhost:3000'],
-    // database: new Pool({
-    //     connectionString: "postgres://postgres:1963@localhost:5432/better"
-    // }),
-    // database: new Database("better.sqlite"),
+    trustedOrigins: ['http://192.168.33.247:3000', 'http://localhost:3000'],
     database: drizzleAdapter(db, {
         provider: "pg", // or "pg" or "mysql"
         schema: schema
     }),
-    // database: createPool({
-    //     host: "localhost",
-    //     user: "root",
-    //     password: "1963",
-    //     database: "better",
-    // }),
     emailVerification: {
         // async sendVerificationEmail({ user, url }) {
         //     const res = await resend.emails.send({
@@ -78,42 +62,13 @@ export const auth = betterAuth({
         // },
     },
     plugins: [
-        organization({
-            // async sendInvitationEmail(data) {
-            //     await resend.emails.send({
-            //         from,
-            //         to: data.email,
-            //         subject: "You've been invited to join an organization",
-            //         react: reactInvitationEmail({
-            //             username: data.email,
-            //             invitedByUsername: data.inviter.user.name,
-            //             invitedByEmail: data.inviter.user.email,
-            //             teamName: data.organization.name,
-            //             inviteLink:
-            //                 process.env.NODE_ENV === "development"
-            //                     ? `http://localhost:3000/accept-invitation/${data.id}`
-            //                     : `${process.env.BETTER_AUTH_URL ||
-            //                     "https://demo.better-auth.com"
-            //                     }/accept-invitation/${data.id}`,
-            //         }),
-            //     });
-            // },
-        }),
         twoFactor({
-            // otpOptions: {
-            //     async sendOTP({ user, otp }) {
-            //         await resend.emails.send({
-            //             from,
-            //             to: user.email,
-            //             subject: "Your OTP",
-            //             html: `Your OTP is ${otp}`,
-            //         });
-            //     },
-            // },
+            otpOptions: {
+                async sendOTP({ user, otp }) {
+                    sendEmailOTP(user.email, otp)
+                },
+            },
         }),
-        username(),
-        // passkey(),
-        openAPI(),
         bearer(),
         admin({
             adminUserIds: ["EXD5zjob2SD6CBWcEQ6OpLRHcyoUbnaB"],
@@ -121,9 +76,6 @@ export const auth = betterAuth({
         multiSession(),
         oAuthProxy(),
         nextCookies(),
-        oidcProvider({
-            loginPage: "/sign-in",
-        }),
         oneTap(),
         phoneNumber({
             sendOTP: ({ phoneNumber, code }, request) => {
@@ -136,7 +88,10 @@ export const auth = betterAuth({
                 getTempName: (phoneNumber) => {
                     return phoneNumber
                 }
-            }
+            },
+            phoneNumberValidator(phoneNumber) {
+                return isValidPhoneNumber(phoneNumber)
+            },
         }),
 
         emailOTP({
@@ -144,26 +99,30 @@ export const auth = betterAuth({
                 sendEmailOTP(email, otp, type)
             }
         }),
-        customSession(async (session) => {
-            const data = await db.query.user.findFirst({
-                where: eq(user.id, session.user.id)
-            })
-            return {
-                ...session,
-                user: {
-                    ...session.user,
-                    isFirstConnection: data?.isFirstConnection,
-                },
-            };
-        }),
+        // customSession(async (session) => {
+        //     const data = await db.query.user.findFirst({
+        //         where: eq(user.id, session.user.id)
+        //     })
+        //     return {
+        //         ...session,
+        //         user: {
+        //             ...session.user,
+        //             isFirstConnection: data?.isFirstConnection,
+        //         },
+        //     };
+        // }),
     ],
     user: {
         additionalFields: {
-            isFirstConnection: {
-                type: "boolean",
+            firstname: {
+                type: "string",
                 required: false,
-                defaultValue: true,
-                input: false
+                input: true
+            },
+            lastname: {
+                type: "string",
+                required: false,
+                input: true
             }
         }
     },
