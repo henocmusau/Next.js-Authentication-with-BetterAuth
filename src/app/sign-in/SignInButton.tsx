@@ -18,7 +18,7 @@ export default function SignInButton() {
           password: "password1234",
           username: "test",
         },
-        callbackURL: '/dashboard',
+        // callbackURL: '/dashboard',
         // headers: headers()
       })
 

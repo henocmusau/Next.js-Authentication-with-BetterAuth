@@ -16,7 +16,7 @@ export async function SignInUsername(formData: FormData) {
                 username: username.trim(),
                 password: formData.get('password') as string,
             },
-            callbackURL: '/dashboard',
+            // callbackURL: '/dashboard',
             // headers: headers()
         })
         console.log(data)
@@ -37,10 +37,10 @@ export async function SignUpUsername(formData: FormData) {
             body: {
                 username: username.trim(),
                 password: formData.get('password') as string,
-                email: formData.get('password') as string,
-                name: firstname.trim() + ' ' + lastname.trim(),
+                // email: formData.get('password') as string,
+                // name: firstname.trim() + ' ' + lastname.trim(),
             },
-            callbackURL: '/dashboard',
+            // callbackURL: '/dashboard',
             // headers: headers()
         })
         console.log(data)

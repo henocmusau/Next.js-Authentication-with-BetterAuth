@@ -29,6 +29,7 @@ export const client = createAuthClient({
         phoneNumberClient(),
         emailOTPClient(),
         genericOAuthClient(),
+        usernameClient()
     ],
     fetchOptions: {
         onError(e) {

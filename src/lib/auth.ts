@@ -9,7 +9,8 @@ import {
     oneTap,
     oAuthProxy,
     phoneNumber,
-    emailOTP
+    emailOTP,
+    username
 } from "better-auth/plugins";
 
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -78,6 +79,7 @@ export const auth = betterAuth({
         oAuthProxy(),
         nextCookies(),
         oneTap(),
+        username(),
         phoneNumber({
             sendOTP: ({ phoneNumber, code }, request) => {
                 sendSMSOTP(phoneNumber, code)
