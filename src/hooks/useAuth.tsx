@@ -169,6 +169,15 @@ export default function useAuth(isSignUp?: boolean) {
         })
     }
 
+    const signInWithGoogle = async () => {
+        await signIn.social({
+            provider: "google"
+        }, {
+            onError(ctx) { setError(ctx.error.message) },
+            onSuccess: (ctx) => router.push('/dashboard')
+        })
+    }
+
     const handleOTPVerified = async (otp: string) => {
         if (!isValidEmail(id.trim()) && !isValidPhoneNumber(id.trim())) return setError('Invalid Email or Phone number')
 
@@ -233,6 +242,7 @@ export default function useAuth(isSignUp?: boolean) {
         handleSendOTP,
         handleSignUp,
         handleSignIn,
-        handleSignOut
+        handleSignOut,
+        signInWithGoogle
     }
 }
